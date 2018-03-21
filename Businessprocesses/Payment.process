@@ -1,54 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <pd:name>Businessprocesses/LOAN ENQUIRY SYSTEM.process</pd:name>
-    <pd:startName>HTTP Receiver</pd:startName>
+    <pd:name>Businessprocesses/Payment.process</pd:name>
+    <pd:startName>Payment Trigger</pd:startName>
     <pd:startX>0</pd:startX>
     <pd:startY>0</pd:startY>
     <pd:returnBindings/>
-    <pd:starter name="HTTP Receiver">
-        <pd:type>com.tibco.plugin.http.HTTPEventSource</pd:type>
-        <pd:resourceType>httppalette.httpEventSource</pd:resourceType>
-        <pd:x>122</pd:x>
-        <pd:y>100</pd:y>
+    <pd:starter name="Payment Trigger">
+        <pd:type>com.tibco.plugin.java.JavaEventSource</pd:type>
+        <pd:resourceType>ae.activities.JavaEventSource</pd:resourceType>
+        <pd:description>This triggers the payment when blacklist boolean is false
+</pd:description>
+        <pd:x>136</pd:x>
+        <pd:y>136</pd:y>
         <config>
-            <outputMode>String</outputMode>
-            <defaultEncoding>ISO8859_1</defaultEncoding>
-            <inputOutputVersion>5.3.0</inputOutputVersion>
-            <newMimeSupport>true</newMimeSupport>
-            <useHTTPAuthentication>true</useHTTPAuthentication>
-            <sharedChannel>/SharedResources/Connections/HTTP/HTTPConnection.sharedhttp</sharedChannel>
-            <parsePostData>false</parsePostData>
-            <customField/>
-            <Headers>
-                <xsd:element name="root">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="Accept" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Accept-Charset" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Accept-Encoding" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Content-Length" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Connection" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Cookie" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
-            </Headers>
+            <packageName>Businessprocesses.Payment</packageName>
+            <fileName>Businessprocesses.Payment</fileName>
+            <fullsource>package Businessprocesses.Payment;
+import java.util.*;
+import java.io.*;
+import com.tibco.plugin.java.JavaProcessStarter;
+/**
+ * This class allows users to write custom process starters using the java programming
+ * language. It extends JavaProcessStarter abstract class that interfaces with the ActiveMatrix Business
+ * works engine. JavaProcessStarter class defines following four abstract methods:
+ * 	 1) init() - Allows users to initialize their resources.
+ * 	 2) onStart() - Allows users to activate their listeners or Observers or kick off a process
+ *                   by calling onEvent(object inputData).
+ * 	 3) onStop() - Allows user to de-activate their listeners or Observers.
+ * 	 4) onShutdown() - Allows users to release the resources. This method is somewhat similar to finalize()
+ * 
+ * JavaProcessStarter also defines three non-abstract methods:
+ * 	 1) getGlobalInstance() - It returns an instance of Java Global Instance defined in the advanced tab.
+ * 	 2) onEvent(Object object) - It is the main entry point into the ActiveMartix Business Works engine. This
+                                   method must be called in onStart() or in the listener or observer interface
+ *                                 to trigger the process.
+ * 	 3) onError(Throwable throwable) - It allows the user to throw an exception if the listener or observer fails
+ *                                      to generate an notification event.
+ */
+public class PaymentPaymentTrigger extends JavaProcessStarter {
+	public PaymentPaymentTrigger() {
+	}
+
+	/**
+	 * Initializes the Java Event Source component during ActiveMatrix Business Works engine
+	 * start-up. It is highly recommended to initialize resource connections
+	 * in this method. Resource connections can also be defined as Java Global Instance.
+	 * To configure Java Global Instance use the advanced tab. It is a common practice to
+	 * define resource connection as Java Global Instance. Users can get a handle to the Java
+	 * Global Instance by calling this.getJavaGlobalInstance().
+	 */
+	public void init() throws Exception {
+	}
+	/**
+	 * This method is called by ActiveMatrix Business Works engine to activate the Java Event Source. This is
+	 * an ideal place for users to add notifier or resource observer. The notifier/observer
+	 * can then call onEvent(Object inputData) method to kick off a process instance.
+	 */
+	public void onStart() throws Exception {
+	}
+	/** This method is called by ActiveMatrix Business Works engine to de-activate the Event Source. User can 
+	 * add code to de-activate a notifier or resource observer. 
+	 */
+	public void onStop() throws Exception {
+	}
+	/** This method is called at ActiveMatrix Business Works engine shutdown. User can add cleanup code in 
+	 *  this method
+	 */
+	public void onShutdown() {
+	}
+}</fullsource>
+            <externalClass>false</externalClass>
+            <fileName_archive>Businessprocesses.Payment</fileName_archive>
+            <packageName_archive>Businessprocesses.Payment</packageName_archive>
+            <java_source_archive/>
         </config>
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>1018</pd:endX>
-    <pd:endY>114</pd:endY>
+    <pd:endX>480</pd:endX>
+    <pd:endY>138</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
-    <pd:targetNamespace>http://xmlns.example.com/1520836609411</pd:targetNamespace>
-    <pd:activity name="Invoke SingPass">
+    <pd:targetNamespace>http://xmlns.example.com/1521627188978</pd:targetNamespace>
+    <pd:activity name="Invoke PayPal API">
         <pd:type>com.tibco.plugin.json.activities.RestActivity</pd:type>
         <pd:resourceType>ae.activities.RestActivity</pd:resourceType>
-        <pd:x>277</pd:x>
-        <pd:y>103</pd:y>
+        <pd:x>302</pd:x>
+        <pd:y>139</pd:y>
         <config>
             <enableProtocolUI>None</enableProtocolUI>
             <restMethodUI>POST</restMethodUI>
@@ -57,10 +95,8 @@
             <WADLPaths/>
             <WADLBaseURL/>
             <restMethodIDUI/>
-            <trustAllHostUI>true</trustAllHostUI>
             <OAuth2ParamPosition>Header</OAuth2ParamPosition>
-            <restURI>https://myinfo.api.gov.sg/dev/v1/authorise</restURI>
-            <OAuth2TokenValue/>
+            <restURI>https://api.sandbox.paypal.com/v1/payments/payment \</restURI>
             <restInputReferNode>
                 <xsd:element name="Parameters">
                     <xsd:complexType>
@@ -154,104 +190,51 @@
         </config>
         <pd:inputBindings/>
     </pd:activity>
-    <pd:activity name="Map Data">
-        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
-        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
-        <pd:x>579</pd:x>
-        <pd:y>109</pd:y>
-        <config/>
-        <pd:inputBindings/>
-    </pd:activity>
     <pd:activity name="Parse JSON">
         <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
         <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
-        <pd:x>436</pd:x>
-        <pd:y>105</pd:y>
+        <pd:x>351</pd:x>
+        <pd:y>262</pd:y>
         <config>
             <SchemaType>xsdType</SchemaType>
             <BadgerfishCheck>false</BadgerfishCheck>
         </config>
         <pd:inputBindings/>
     </pd:activity>
-    <pd:activity name="Interest Rate Query">
-        <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
-        <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
-        <pd:description>Getting the relevant interest rate
-</pd:description>
-        <pd:x>715</pd:x>
-        <pd:y>116</pd:y>
+    <pd:activity name="Render JSON">
+        <pd:type>com.tibco.plugin.json.activities.JSONRenderActivity</pd:type>
+        <pd:resourceType>ae.activities.JSONRenderActivity</pd:resourceType>
+        <pd:x>553</pd:x>
+        <pd:y>260</pd:y>
         <config>
-            <timeout>10</timeout>
-            <commit>false</commit>
-            <maxRows>100</maxRows>
-            <emptyStrAsNil>false</emptyStrAsNil>
-            <statement>SELECT * FROM FINANCIAL_TABLE WHERE SALARY &lt; ? INNER JOIN...</statement>
-            <jdbcSharedConfig>/SharedResources/Connections/JDBC/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <SchemaType>xsdType</SchemaType>
+            <BadgerfishCheck>false</BadgerfishCheck>
         </config>
-        <pd:inputBindings>
-            <jdbcQueryActivityInput/>
-        </pd:inputBindings>
+        <pd:inputBindings/>
     </pd:activity>
-    <pd:activity name="Send HTTP Response">
-        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
-        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>868</pd:x>
-        <pd:y>111</pd:y>
+    <pd:activity name="REST Dispatch and Reply">
+        <pd:type>com.tibco.plugin.json.rest.server.activities.RestAdapterActivity</pd:type>
+        <pd:resourceType>rest.activities.RestAdapter</pd:resourceType>
+        <pd:x>168</pd:x>
+        <pd:y>332</pd:y>
         <config>
-            <Headers>
-                <xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="root">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
-            </Headers>
-            <closeConnection>true</closeConnection>
+            <RestService>
+                <InnerService>
+                    <ns0:application xmlns:ns0="http://wadl.dev.java.net/2009/02" name="Application"/>
+                </InnerService>
+            </RestService>
         </config>
         <pd:inputBindings/>
     </pd:activity>
     <pd:transition>
-        <pd:from>Invoke SingPass</pd:from>
-        <pd:to>Parse JSON</pd:to>
+        <pd:from>Payment Trigger</pd:from>
+        <pd:to>Invoke PayPal API</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>HTTP Receiver</pd:from>
-        <pd:to>Invoke SingPass</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Parse JSON</pd:from>
-        <pd:to>Map Data</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Map Data</pd:from>
-        <pd:to>Interest Rate Query</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Interest Rate Query</pd:from>
-        <pd:to>Send HTTP Response</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Send HTTP Response</pd:from>
+        <pd:from>Invoke PayPal API</pd:from>
         <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
