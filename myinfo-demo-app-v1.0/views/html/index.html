@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>MyInfo Demo Application</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
+    <!-- Plugin CSS -->
+    <link href="components/magnific-popup/magnific-popup.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="css/creative.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/components/jquery/jquery.min.js"></script>
+    <script src="/components/jquery/purl.js"></script>
+    <script src="/components/tether/js/tether.min.js"></script>
+
+
+    <script>
+		// SETUP VARIABLES
+        var scrollToAppForm = false;
+
+        // Variables for API #1 - Authorise API
+        var authApiUrl; // URL for authorise API
+        var clientId; 	// your app_id/client_id provided to you during onboarding
+        var redirectUrl; //callback url for your application
+
+        var attributes;  // the attributes you are retrieving for your application to fill the form
+        var authLevel; // the auth level, determines the flow
+        // the purpose of your data retrieval
+        var purpose = "demonstrating MyInfo APIs";
+
+        // randomly generated state
+        var state = "123";
+
+		window.onload = function(e){
+	    	// invoke AJAX call to get the clientId & redirectURL from serverside
+	        $.ajax({
+	            url: "/getEnv",
+	            data: {
+	            },
+	            type: "GET", // get from serverside
+	            success: function (data) {
+	            	// successful response from serverside
+					if (data.status == "OK") { // successful
+						// fill up the application form
+						clientId = data.clientId;
+						redirectUrl = data.redirectUrl;
+						authApiUrl = data.authApiUrl;
+						attributes = data.attributes;
+						authLevel = data.authLevel;
+					} else {
+						// error occured
+						alert("ERROR:"+JSON.stringify(data.msg));
+					}
+
+	            }
+	        });
+ 		}
+
+        // main function for handling form events
+        $(function() {
+
+            $("#formAuthorise").submit(function(event){
+                event.preventDefault();
+                callAuthoriseApi();
+            });
+            $("#formApplication").submit(function(event){
+                event.preventDefault();
+                // add code here to submit the application form back to server for processing
+                $('#complete').toggleClass('hidden');
+            });
+
+        });
+
+        // Function for calling API #1 - Authorise
+        function callAuthoriseApi() {
+            var authoriseUrl = authApiUrl + "?client_id=" + clientId
+            	+ "&attributes="+ attributes
+            	+ "&purpose=" + purpose
+            	+ "&state=" + state
+            	+ "&redirect_uri=" + redirectUrl;
+
+			window.location = authoriseUrl;
+        }
+
+
+        // Function for calling server side APIs (token & person) to get the person data for prefilling form
+        function callServerAPIs () {
+			var authCode = $.url(this.location.href).param('code');
+			//alert ("authorisation code="+authCode);
+
+			// invoke AJAX call from frontend clientside to your backend serverside
+            $.ajax({
+	            url: "/getPersonData",
+                data: {
+	            	code: authCode,
+                },
+                type: "POST", // post to serverside
+                success: function (data) {
+                	//alert ("data:"+JSON.stringify(data));
+                	// successful response from serverside
+					if (data.status == "OK") { // successful
+						// fill up the application form
+						prefillForm(data.text);
+					} else {
+						// error occured
+						alert("ERROR:"+JSON.stringify(data.msg));
+					}
+
+
+                }
+            });
+
+
+        }
+
+
+		// Prefill Online Form with MyInfo data
+		function prefillForm(data){
+			// prefill form data
+            var formValues = {
+                    "uinfin":data.uinfin,
+                    "name":data.name.value,
+                    "sex":data.sex.value,
+                    "race":data.race.value,
+                    "nationality":data.nationality.value,
+                    "dob":data.dob.value,
+                    "email":data.email.value,
+                    "mobileno":toStr(data.mobileno,'PHONENUMLOCAL'),
+                    "regadd":toStr(data.regadd,'ADDRESSLOCAL'),
+                    "housingtype":toStr(data,'HOUSINGTYPE'),
+                    "marital":data.marital.value,
+                    "edulevel":data.edulevel.value,
+                    "assessableincome":toStr(data.assessableincome, 'MONEY'),
+                };
+
+            // Populate values
+			populate('#formApplication', formValues);
+
+		}
+
+		function getParameterByName(name, url) {
+		    if (!url) {
+		        url = window.location.href;
+		    }
+		    name = name.replace(/[\[\]]/g, "\\$&");
+		    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		        results = regex.exec(url);
+		    if (!results) return null;
+		    if (!results[2]) return '';
+		    return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
+
+        // CALLBACK HANDLER
+        if (this.location.href.indexOf("callback?") > -1) {
+			scrollToAppForm	= true;
+
+			// call the backend server APIs
+			callServerAPIs ();
+	    }
+
+		function populate(frm, data) {
+			$.each(data, function(key, value){
+				$('[name='+key+']', frm).val(value);
+				$('[name='+key+']', frm).prop('disabled', true);
+				});
+		}
+
+		function toStr(data, type) {
+			if (data == undefined)
+				return null;
+
+			if (type == 'ADDRESSLOCAL') {
+				var val = "";
+				if (data.block !== undefined && data.block != "")
+					val = val + "BLK " + data.block;
+				if (data.building !== undefined && data.building != "")
+					val = val + " " + data.building;
+				if (data.floor !== undefined && data.floor != "" )
+					val = val + " " + data.floor;
+				if (data.unit !== undefined && data.unit != "")
+					val = val + "-" + data.unit;
+				if (data.street !== undefined && data.street != "")
+					val = val + " " + data.street;
+				if (data.postal !== undefined && data.postal != "")
+					val = val + " S(" + data.postal + ")";
+				return val;
+			} else if (type == 'PHONENUMLOCAL') {
+				var val = data.prefix + data.code + " " + data.nbr;
+				return val;
+			} else if (type == 'MONEY') {
+				var val = data.value.replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+				return val;
+			} else if (type == 'HOUSINGTYPE') {
+				var val = "";
+				if (data.housingtype.value != undefined && data.housingtype.value !== "")
+					val = data.housingtype.value;
+				else if (data.hdbtype.value != undefined && data.hdbtype.value !== "")
+					val = data.hdbtype.value;
+				return val;
+			} else {
+				return null;
+			}
+		}
+
+
+    </script>
+
+
+</head>
+
+<body id="page-top">
+
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="/">MyInfo Demo Application</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <!--
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="page-scroll" href="#about">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#services">Services</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#portfolio">Portfolio</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                </ul>
+                -->
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <h1 id="homeHeading">MyInfo Demo Application</h1>
+                <hr>
+                <h3>This demo is an example of how your application should integrate with  <img src="img/myinfo-white-logo.png"/></h3>
+                <h4>To start the SingPass login and consent process, click on the "Retrieve MyInfo" button below.</h4>
+                <br>
+                <form id="formAuthorise">
+                    <a href="#" onclick="$(this).closest('form').submit()" type="submit" class="btn btn-primary btn-xl page-scroll">Retrieve MyInfo</a>
+                </form>
+                <h5>Note: refer to the Quick Reference Guide on the <a target="_blank" href="https://myinfo-api.app.gov.sg/dev/quickref">MyInfo Developer & Partner Portal</a> for the test accounts to be used.</h5>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="appform" class="hidden">
+        <form id="formApplication" class="toggle_content">
+        <div class="container"  >
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Application pre-filled with <img src="img/myinfo-logo.png"/>!</h2>
+                    <h4>Confirm your details below and click "Submit Application"</h4>
+
+                    <hr class="primary">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>NRIC/FIN</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="uinfin" value="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Name</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="name" value="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Sex</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="sex" value="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Race</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="race" value="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Nationality</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="nationality" value="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Date of Birth</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="dob" value="">
+                </div>
+            </div>
+			<hr class="secondary">
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Email</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="email" value="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Mobile Number</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="mobileno" value="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Registered Address</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="regadd" value="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Housing Type</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="housingtype" value="">
+                </div>
+            </div>
+			<hr class="secondary">
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Marital Status</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="marital" value="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Highest Education Level</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="edulevel" value="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 text-right">
+                    <h4>Yearly Assessable Income (SGD)</h4>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <input class="form-control" name="assessableincome" value="">
+                </div>
+            </div>
+
+        </div>
+        <div class="container text-center">
+				<br>
+				<a href="#complete" onclick="$(this).closest('form').submit()" type="submit" class="btn btn-primary btn-xl page-scroll">Submit Application</a>
+
+        </div>
+        </form>
+    </section>
+
+    <aside class="bg-dark hidden" id="complete">
+        <div class="container text-center" style="margin-top:15%; margin-bottom:30%" >
+            <div class="call-to-action">
+                <br>
+                <h2>And you're done!</h2>
+                <h4>Your application is being processed and you will receive an SMS update within 3 days.</h4>
+                <br>
+                <h3>Wasn't that easy?</h3>
+<!--                 <a href="#" class="btn btn-default btn-xl sr-button">OK!</a> -->
+            </div>
+        </div>
+    </aside>
+    <!-- jQuery -->
+    <script src="components/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="components/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="components/scrollreveal/scrollreveal.min.js"></script>
+    <script src="components/magnific-popup/jquery.magnific-popup.min.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/creative.js"></script>
+	<script>
+	    // this needs to be at the bottom of the page so that the page scrolling can work
+		if (scrollToAppForm == true){
+			// scroll to application form
+			$('#appform').toggleClass('hidden');
+			$('html, body').animate({
+				scrollTop: $("#appform").offset().top
+				}, 500);
+		}
+
+        if (authLevel == 'L0') {
+            $("#formPerson").show();
+        } else {
+            $("#formPerson").hide();
+        }
+	</script>
+
+</body>
+
+</html>
