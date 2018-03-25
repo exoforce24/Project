@@ -4,22 +4,24 @@
  * and open the template in the editor.
  */
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.*;
-import java.util.*;
-
 /**
  *
  *
  */
-@WebServlet(name = "LoanWebAppServlet", urlPatterns = {"/json"})
+@WebServlet(urlPatterns = {"/LoanWebAppServlet"})
 public class LoanWebAppServlet extends HttpServlet {
 
     
@@ -34,29 +36,31 @@ public class LoanWebAppServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            ArrayList<String> result = new ArrayList<String>();
-            Gson gson = new GsonBuilder().create();
-
             String fullName = request.getParameter("fullName");
             String nric = request.getParameter("NRIC");
             String loanAmount = request.getParameter("loanAmount");
             String loanType = request.getParameter("loanType");
 
-            
-            if (fullName!= null && !fullName.equals("") &&
-                    nric!= null && !nric.equals("") &&
-                            loanAmount!= null && !loanAmount.equals("") &&
-                              loanType!= null && !loanType.equals("")) {
-                result.add(fullName);
-                result.add(nric);
-                result.add(loanAmount);
-                result.add(loanType);
+            try (PrintWriter out = response.getWriter()) {
+                URL url = new URL("http://localhost8999:/?fullName="+fullName+"&nric="+nric+"&loanAmount="+loanAmount+"&loanType="+loanType);
+                URLConnection conn = url.openConnection();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line;
+               /* while ((line = rd.readLine()) != null) {
+                    if(Integer.parseInt(line) > 0) {
+                        RequestDispatcher d = request.getRequestDispatcher("payment.jsp");
+                        request.setAttribute("priceusd", priceusd);
+                        request.setAttribute("price", price);
+                        d.forward(request, response);
+                        return;
+                    } else {
+                        RequestDispatcher d = request.getRequestDispatcher("bookingfail.jsp");
+                        d.forward(request, response);
+                        return;
+                    }
+                }*/
             }
-               
-             
-            out.println(gson.toJson(result));
+        }
         }
     }
 
