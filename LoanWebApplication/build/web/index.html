@@ -25,8 +25,52 @@
 
         <!-- Custom styles for this template -->
         <link href="css/new-age.min.css" rel="stylesheet">
+        
+        <style>
+        .dropbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {background-color: #f1f1f1}
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #3e8e41;
+        }
+        </style>    
 
     </head>
+    
 
     <body id="page-top">
 
@@ -89,14 +133,15 @@
                         Loan Amount:<br>
                         <input type="text" name="Loan Amount"></form><br/> 
                         <br>
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown button
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Personal</a>
-                            <a class="dropdown-item" href="#">Medical</a>
-                            <a class="dropdown-item" href="#">Emergency</a>
-                        </div>
+           
+                            <div class ="dropdown" style ="float:right;">
+                                <button class ="dropbtn">Select Loan Type</button>
+                                <div class ="dropdown-content" style="left:0;">
+                                    <a href="#">Personal</a>
+                                    <a href="#">Medical</a>
+                                    <a href="#">Emergency</a>
+                                </div>
+                            </div>
                         <input class="btn btn-theme btn-block" type = 'submit' value = 'Submit'>
                         </form>
                         <form action= <!--where do we send the values to? -->
