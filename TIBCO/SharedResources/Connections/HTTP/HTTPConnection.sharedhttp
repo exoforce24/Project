@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ns0:httpSharedResource xmlns:ns0="www.tibco.com/shared/HTTPConnection">
     <config>
-        <Host>localhost</Host>
+        <Host/>
         <serverType>Tomcat</serverType>
+        <Port>8894</Port>
         <HttpConnectionProperties>
             <row>
                 <PropertyName>maxPostSize (bytes)</PropertyName>
@@ -40,6 +41,5 @@
                 <PropertyDefaultValue>60000</PropertyDefaultValue>
             </row>
         </HttpConnectionProperties>
-        <Port>80</Port>
     </config>
 </ns0:httpSharedResource>

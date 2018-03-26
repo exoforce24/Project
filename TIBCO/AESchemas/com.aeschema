@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Repository:repository xmlns="http://www.tibco.com/xmlns/aemeta/types/2002" xmlns:Repository="http://www.tibco.com/xmlns/repo/types/2002" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <scalar name="BOOL">
+        <dataTypeName>BOOL</dataTypeName>
+        <javaClass>java.lang.Boolean</javaClass>
+    </scalar>
+    <scalar name="BSTR">
+        <dataTypeName>BSTR</dataTypeName>
+        <javaClass>java.lang.String</javaClass>
+    </scalar>
+    <scalar name="CY">
+        <dataTypeName>CY</dataTypeName>
+        <javaClass>java.lang.BigDecimal</javaClass>
+    </scalar>
+    <scalar name="DATE">
+        <dataTypeName>DATE</dataTypeName>
+        <javaClass>java.util.Date</javaClass>
+    </scalar>
+    <scalar name="double">
+        <dataTypeName>double</dataTypeName>
+        <javaClass>java.lang.Double</javaClass>
+    </scalar>
+    <scalar name="float">
+        <dataTypeName>float</dataTypeName>
+        <javaClass>java.lang.Float</javaClass>
+    </scalar>
+    <scalar name="int">
+        <dataTypeName>int</dataTypeName>
+        <javaClass>java.lang.Integer</javaClass>
+    </scalar>
+    <scalar name="long">
+        <dataTypeName>long</dataTypeName>
+        <javaClass>java.lang.Integer</javaClass>
+    </scalar>
+    <scalar name="short">
+        <dataTypeName>short</dataTypeName>
+        <javaClass>java.lang.Short</javaClass>
+    </scalar>
+    <scalar name="uchar">
+        <dataTypeName>uchar</dataTypeName>
+        <javaClass>java.lang.Short</javaClass>
+    </scalar>
+    <scalar name="uint">
+        <dataTypeName>uint</dataTypeName>
+        <javaClass>java.lang.Long</javaClass>
+    </scalar>
+    <scalar name="ulong">
+        <dataTypeName>ulong</dataTypeName>
+        <javaClass>java.lang.Long</javaClass>
+    </scalar>
+    <scalar name="ushort">
+        <dataTypeName>ushort</dataTypeName>
+        <javaClass>java.lang.Integer</javaClass>
+    </scalar>
+    <scalar name="VARIANT_BOOL">
+        <dataTypeName>VARIANT_BOOL</dataTypeName>
+        <javaClass>java.lang.Short</javaClass>
+    </scalar>
+    <designer>
+        <lockedProperties/>
+        <fixedChildren/>
+        <resourceDescriptions/>
+    </designer>
+</Repository:repository>

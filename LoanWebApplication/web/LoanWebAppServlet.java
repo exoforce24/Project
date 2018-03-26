@@ -36,16 +36,24 @@ public class LoanWebAppServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+           response.setContentType("text/html;charset=UTF-8");
             String fullName = request.getParameter("fullName");
             String nric = request.getParameter("NRIC");
             String loanAmount = request.getParameter("loanAmount");
             String loanType = request.getParameter("loanType");
 
             try (PrintWriter out = response.getWriter()) {
-                URL url = new URL("http://localhost8999:/?fullName="+fullName+"&nric="+nric+"&loanAmount="+loanAmount+"&loanType="+loanType);
+                URL url = new URL("http://localhost9999:/?fullName="+fullName+"&nric="+nric+"&loanAmount="+loanAmount+"&loanType="+loanType);
                 URLConnection conn = url.openConnection();
                 BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String line;
+               RequestDispatcher d = request.getRequestDispatcher("loan.jsp");
+               request.setAttribute("fullName", fullName);
+               request.setAttribute("NRIC", NRIC);
+               request.setAttribute("loanAmount", loanAmount);
+               request.setAttribute("loanType", loanType);
+               d.forward(request,response);
+               return;
+               
                /* while ((line = rd.readLine()) != null) {
                     if(Integer.parseInt(line) > 0) {
                         RequestDispatcher d = request.getRequestDispatcher("payment.jsp");

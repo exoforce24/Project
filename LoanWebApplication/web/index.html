@@ -81,26 +81,27 @@
                 <div class="row">
                     <div class="col-md-8 mx-auto">
                         <h2 class="section-heading">Discover what all the buzz is about!</h2>
-                        <form>
-                            Full name:<br>
-                            <input type="text" name="fullName"><br>
-                            NRIC:<br>
-                            <input type="text" name="NRIC"></form>
-                        Loan Amount:<br>
-                        <input type="text" name="Loan Amount"></form><br/> 
+                        
+                        <form class="form-login" method="post" action="http://localhost:8894">
+                            <input type="text" class="form-control" name="fullName" placeholder="Full name" autofocus required>
+                           <br>
+                            <input type="text" class="form-control" name="NRIC" placeholder="NRIC">
+                     <br>
+                        <input type="text" class="form-control" name="loanAmount" placeholder="Loan Amount"><br/> 
                         <br>
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown button
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Personal</a>
-                            <a class="dropdown-item" href="#">Medical</a>
-                            <a class="dropdown-item" href="#">Emergency</a>
-                        </div>
+                        
+                            
+                         <select id="loanType" name="loanType">
+                            <option value="personal">Personal</option>
+                            <option value="medical">Medical</option>
+                            <option value="emergency">Emergency</option>
+                        </select>
+                            <br>
+                            
                         <input class="btn btn-theme btn-block" type = 'submit' value = 'Submit'>
+                            
                         </form>
-                        <form action= <!--where do we send the values to? -->
-                        </form> 
+                        
                     </div>
                 </div>
             </div>

@@ -34,6 +34,14 @@
 			<modTime>1520836574345</modTime>
 		</globalVariable>
 		<globalVariable>
+			<name>Env</name>
+			<value>DEV</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1522036137128</modTime>
+		</globalVariable>
+		<globalVariable>
 			<name>HawkEnabled</name>
 			<value>false</value>
 			<deploymentSettable>true</deploymentSettable>
@@ -114,6 +122,14 @@
 			<modTime>1520836574371</modTime>
 		</globalVariable>
 		<globalVariable>
+			<name>TIBHawkDeamon</name>
+			<value></value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1522036137131</modTime>
+		</globalVariable>
+		<globalVariable>
 			<name>TIBHawkNetwork</name>
 			<value></value>
 			<deploymentSettable>true</deploymentSettable>
@@ -128,6 +144,14 @@
 			<serviceSettable>false</serviceSettable>
 			<type>String</type>
 			<modTime>1520836574350</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>deployment</name>
+			<value>HTTP</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1522036137134</modTime>
 		</globalVariable>
 	</globalVariables>
 </repository>

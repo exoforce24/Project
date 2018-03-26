@@ -8,16 +8,14 @@
     <pd:starter name="HTTP Receiver">
         <pd:type>com.tibco.plugin.http.HTTPEventSource</pd:type>
         <pd:resourceType>httppalette.httpEventSource</pd:resourceType>
-        <pd:x>122</pd:x>
-        <pd:y>100</pd:y>
+        <pd:x>94</pd:x>
+        <pd:y>134</pd:y>
         <config>
             <outputMode>String</outputMode>
             <defaultEncoding>ISO8859_1</defaultEncoding>
             <inputOutputVersion>5.3.0</inputOutputVersion>
             <newMimeSupport>true</newMimeSupport>
-            <useHTTPAuthentication>true</useHTTPAuthentication>
             <sharedChannel>/SharedResources/Connections/HTTP/HTTPConnection.sharedhttp</sharedChannel>
-            <parsePostData>false</parsePostData>
             <customField>
                 <row>
                     <attribute>fullName</attribute>
@@ -41,35 +39,35 @@
                 </row>
             </customField>
             <Headers>
-                <xsd:element name="root">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="Accept" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Accept-Charset" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Accept-Encoding" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Content-Length" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Connection" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Cookie" type="xsd:string" minOccurs="0"/>
-                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
+                <xs:element xmlns:xs="http://www.w3.org/2001/XMLSchema" name="root">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Accept" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Accept-Charset" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Accept-Encoding" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Content-Length" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Connection" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Cookie" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
             </Headers>
         </config>
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>1018</pd:endX>
-    <pd:endY>114</pd:endY>
+    <pd:endX>311</pd:endX>
+    <pd:endY>159</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1520836609411</pd:targetNamespace>
     <pd:activity name="Invoke SingPass">
         <pd:type>com.tibco.plugin.json.activities.RestActivity</pd:type>
         <pd:resourceType>ae.activities.RestActivity</pd:resourceType>
-        <pd:x>277</pd:x>
-        <pd:y>103</pd:y>
+        <pd:x>382</pd:x>
+        <pd:y>41</pd:y>
         <config>
             <enableProtocolUI>None</enableProtocolUI>
             <restMethodUI>POST</restMethodUI>
@@ -194,33 +192,16 @@
         </config>
         <pd:inputBindings/>
     </pd:activity>
-    <pd:activity name="Interest Rate Query">
-        <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
-        <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
-        <pd:description>Getting the relevant interest rate
-</pd:description>
-        <pd:x>715</pd:x>
-        <pd:y>116</pd:y>
-        <config>
-            <timeout>10</timeout>
-            <commit>false</commit>
-            <maxRows>100</maxRows>
-            <emptyStrAsNil>false</emptyStrAsNil>
-            <statement>SELECT * FROM FINANCIAL_TABLE WHERE SALARY &lt; ? INNER JOIN...</statement>
-            <jdbcSharedConfig>/SharedResources/Connections/JDBC/JDBC Connection.sharedjdbc</jdbcSharedConfig>
-        </config>
-        <pd:inputBindings>
-            <jdbcQueryActivityInput/>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="Send HTTP Response">
+    <pd:activity name="Send-HTTP-Response-1">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>868</pd:x>
-        <pd:y>111</pd:y>
+        <pd:x>198</pd:x>
+        <pd:y>53</pd:y>
         <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HTTP Receiver</eventSource>
             <Headers>
-                <xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="root">
+                <xsd:element name="root">
                     <xsd:complexType>
                         <xsd:sequence>
                             <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
@@ -232,9 +213,14 @@
                     </xsd:complexType>
                 </xsd:element>
             </Headers>
-            <closeConnection>true</closeConnection>
         </config>
-        <pd:inputBindings/>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="&quot;Please wait while we get back to you&quot;"/>
+                </asciiContent>
+            </ResponseActivityInput>
+        </pd:inputBindings>
     </pd:activity>
     <pd:transition>
         <pd:from>Invoke SingPass</pd:from>
@@ -245,34 +231,14 @@
     </pd:transition>
     <pd:transition>
         <pd:from>HTTP Receiver</pd:from>
-        <pd:to>Invoke SingPass</pd:to>
+        <pd:to>Send-HTTP-Response-1</pd:to>
+        <pd:xpathDescription>Incoming HTTP</pd:xpathDescription>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>Parse JSON</pd:from>
-        <pd:to>Map Data</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Map Data</pd:from>
-        <pd:to>Interest Rate Query</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Interest Rate Query</pd:from>
-        <pd:to>Send HTTP Response</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Send HTTP Response</pd:from>
+        <pd:from>Send-HTTP-Response-1</pd:from>
         <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
