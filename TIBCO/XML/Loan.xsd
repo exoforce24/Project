@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!--Created with Liquid Studio 2017 - Developer Bundle Edition (Education) 15.1.17.7979 (https://www.liquid-technologies.com)-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="Loan">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1" />
-                <xs:element name="NRIC" type="xs:string" minOccurs="1" maxOccurs="1" />
-                <xs:element name="Amount" type="xs:double" minOccurs="1" maxOccurs="1" />
-                <xs:element name="Type" type="xs:string" minOccurs="1" maxOccurs="1" />
-                <xs:element name="InterestRate" type="xs:double" minOccurs="1" maxOccurs="1" />
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Studio 2017 - Developer Bundle Edition (Education) 15.1.17.7979 (https://www.liquid-technologies.com) -->
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Loan">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Name" type="xs:string" />
+        <xs:element minOccurs="0" name="NRIC" type="xs:string" />
+        <xs:element minOccurs="0" name="Amount" type="xs:unsignedShort" />
+        <xs:element minOccurs="0" name="Type" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>
