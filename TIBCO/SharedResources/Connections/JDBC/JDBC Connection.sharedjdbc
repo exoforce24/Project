@@ -8,7 +8,7 @@
         <loginTimeout>0</loginTimeout>
         <connectionType>JDBC</connectionType>
         <UseSharedJndiConfig>false</UseSharedJndiConfig>
-        <location>jdbc:mysql://&lt;hostname&gt;:&lt;port&gt;/&lt;databasename&gt;</location>
+        <location>jdbc:mysql://localhost:3306/blacklist</location>
         <user>root</user>
     </config>
 </BWSharedResource>

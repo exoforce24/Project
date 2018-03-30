@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <pd:name>Businessprocesses/LOAN ENQUIRY SYSTEM.process</pd:name>
-    <pd:startName>HTTP Receiver</pd:startName>
+    <pd:startName>Loan Application receiver</pd:startName>
     <pd:startX>0</pd:startX>
     <pd:startY>0</pd:startY>
     <pd:returnBindings/>
-    <pd:starter name="HTTP Receiver">
+    <pd:starter name="Loan Application receiver">
         <pd:type>com.tibco.plugin.http.HTTPEventSource</pd:type>
         <pd:resourceType>httppalette.httpEventSource</pd:resourceType>
-        <pd:x>94</pd:x>
-        <pd:y>134</pd:y>
+        <pd:x>74</pd:x>
+        <pd:y>43</pd:y>
         <config>
             <outputMode>String</outputMode>
             <defaultEncoding>ISO8859_1</defaultEncoding>
@@ -23,7 +23,7 @@
                     <attributeCard>required</attributeCard>
                 </row>
                 <row>
-                    <attribute>NRIC</attribute>
+                    <attribute>nric</attribute>
                     <attributeType>string</attributeType>
                     <attributeCard>required</attributeCard>
                 </row>
@@ -39,35 +39,35 @@
                 </row>
             </customField>
             <Headers>
-                <xs:element xmlns:xs="http://www.w3.org/2001/XMLSchema" name="root">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="Accept" type="xsd:string" minOccurs="0"/>
-                            <xs:element name="Accept-Charset" type="xsd:string" minOccurs="0"/>
-                            <xs:element name="Accept-Encoding" type="xsd:string" minOccurs="0"/>
-                            <xs:element name="Content-Type" type="xsd:string" minOccurs="0"/>
-                            <xs:element name="Content-Length" type="xsd:string" minOccurs="0"/>
-                            <xs:element name="Connection" type="xsd:string" minOccurs="0"/>
-                            <xs:element name="Cookie" type="xsd:string" minOccurs="0"/>
-                            <xs:element name="Pragma" type="xsd:string" minOccurs="0"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="Accept" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Charset" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Encoding" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Length" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Connection" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
             </Headers>
         </config>
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>311</pd:endX>
-    <pd:endY>159</pd:endY>
+    <pd:endX>388</pd:endX>
+    <pd:endY>35</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1520836609411</pd:targetNamespace>
     <pd:activity name="Invoke SingPass">
         <pd:type>com.tibco.plugin.json.activities.RestActivity</pd:type>
         <pd:resourceType>ae.activities.RestActivity</pd:resourceType>
-        <pd:x>382</pd:x>
-        <pd:y>41</pd:y>
+        <pd:x>814</pd:x>
+        <pd:y>46</pd:y>
         <config>
             <enableProtocolUI>None</enableProtocolUI>
             <restMethodUI>POST</restMethodUI>
@@ -171,35 +171,39 @@
                 </xsd:element>
             </restOutputReferNode>
         </config>
-        <pd:inputBindings/>
+        <pd:inputBindings>
+            <ns:ActivityInput/>
+        </pd:inputBindings>
     </pd:activity>
     <pd:activity name="Map Data">
         <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
         <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
-        <pd:x>579</pd:x>
-        <pd:y>109</pd:y>
+        <pd:x>835</pd:x>
+        <pd:y>177</pd:y>
         <config/>
         <pd:inputBindings/>
     </pd:activity>
     <pd:activity name="Parse JSON">
         <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
         <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
-        <pd:x>436</pd:x>
-        <pd:y>105</pd:y>
+        <pd:x>581</pd:x>
+        <pd:y>78</pd:y>
         <config>
             <SchemaType>xsdType</SchemaType>
             <BadgerfishCheck>false</BadgerfishCheck>
         </config>
-        <pd:inputBindings/>
+        <pd:inputBindings>
+            <ns:ActivityInputClass/>
+        </pd:inputBindings>
     </pd:activity>
     <pd:activity name="Send-HTTP-Response-1">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>198</pd:x>
-        <pd:y>53</pd:y>
+        <pd:x>225</pd:x>
+        <pd:y>35</pd:y>
         <config>
             <closeConnection>true</closeConnection>
-            <eventSource>HTTP Receiver</eventSource>
+            <eventSource>Loan Application receiver</eventSource>
             <Headers>
                 <xsd:element name="root">
                     <xsd:complexType>
@@ -222,6 +226,75 @@
             </ResponseActivityInput>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="Blacklist">
+        <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+        <pd:x>310</pd:x>
+        <pd:y>186</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <maxRows>100</maxRows>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/SharedResources/Connections/JDBC/JDBC Connection.sharedjdbc</jdbcSharedConfig>
+            <statement>SELECT name FROM personal_details WHERE nric = ?</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>nric</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+            <oraObjects/>
+            <oraTables/>
+            <QueryOutputCachedSchemaColumns>name</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>-1</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+        </config>
+        <pd:inputBindings>
+            <jdbcQueryActivityInput>
+                <nric>
+                    <xsl:choose>
+                        <xsl:when test="exists($Loan-Application-receiver/ProcessStarterOutput/parameters/nric)">
+                            <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/nric"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </nric>
+            </jdbcQueryActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Parse XML">
+        <pd:type>com.tibco.plugin.xml.XMLParseActivity</pd:type>
+        <pd:resourceType>ae.activities.XMLParseActivity</pd:resourceType>
+        <pd:x>185</pd:x>
+        <pd:y>183</pd:y>
+        <config>
+            <inputStyle>text</inputStyle>
+            <xsdVersion>default</xsdVersion>
+            <validateOutput>true</validateOutput>
+            <term ref=""/>
+        </config>
+        <pd:inputBindings>
+            <xmlString>
+                <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/PostData"/>
+            </xmlString>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Write File">
+        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+        <pd:x>435</pd:x>
+        <pd:y>221</pd:y>
+        <config>
+            <encoding>text</encoding>
+            <compressFile>None</compressFile>
+            <append>true</append>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
     <pd:transition>
         <pd:from>Invoke SingPass</pd:from>
         <pd:to>Parse JSON</pd:to>
@@ -230,7 +303,7 @@
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>HTTP Receiver</pd:from>
+        <pd:from>Loan Application receiver</pd:from>
         <pd:to>Send-HTTP-Response-1</pd:to>
         <pd:xpathDescription>Incoming HTTP</pd:xpathDescription>
         <pd:lineType>Default</pd:lineType>
@@ -239,6 +312,35 @@
     </pd:transition>
     <pd:transition>
         <pd:from>Send-HTTP-Response-1</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Loan Application receiver</pd:from>
+        <pd:to>Parse XML</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse XML</pd:from>
+        <pd:to>Blacklist</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Blacklist</pd:from>
+        <pd:to>Write File</pd:to>
+        <pd:xpathDescription>Write to Error File</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-65485</pd:lineColor>
+        <pd:conditionType>error</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Write File</pd:from>
         <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
