@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Studio 2017 - Developer Bundle Edition (Education) 15.1.16.7872 (https://www.liquid-technologies.com) -->
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Loan">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Name" type="xs:string" />
+        <xs:element minOccurs="0" name="NRIC" type="xs:string" />
+        <xs:element minOccurs="0" name="Contact_No" type="xs:unsignedInt" />
+        <xs:element minOccurs="0" name="Email" type="xs:string" />
+        <xs:element minOccurs="0" name="loanAmount" type="xs:unsignedShort" />
+        <xs:element minOccurs="0" name="loanType" type="xs:string" />
+        <xs:element minOccurs="0" name="InterestRate" type="xs:unsignedByte" />
+        <xs:element minOccurs="0" name="Payment_Type" type="xs:string" />
+        <xs:element minOccurs="0" name="Preferred_Mode_Of_Communication" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

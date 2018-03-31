@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan Applicant.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan Applicant.xsd" schemaLocation="/XML/Loan Applicant.xsd"/>
     <pd:name>Businessprocesses/LOAN ENQUIRY SYSTEM.process</pd:name>
     <pd:startName>Loan Application receiver</pd:startName>
     <pd:startX>0</pd:startX>
@@ -229,8 +230,8 @@
     <pd:activity name="Blacklist">
         <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
         <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
-        <pd:x>310</pd:x>
-        <pd:y>186</pd:y>
+        <pd:x>317</pd:x>
+        <pd:y>137</pd:y>
         <config>
             <timeout>10</timeout>
             <commit>false</commit>
@@ -269,13 +270,13 @@
     <pd:activity name="Parse XML">
         <pd:type>com.tibco.plugin.xml.XMLParseActivity</pd:type>
         <pd:resourceType>ae.activities.XMLParseActivity</pd:resourceType>
-        <pd:x>185</pd:x>
-        <pd:y>183</pd:y>
+        <pd:x>177</pd:x>
+        <pd:y>224</pd:y>
         <config>
             <inputStyle>text</inputStyle>
             <xsdVersion>default</xsdVersion>
             <validateOutput>true</validateOutput>
-            <term ref=""/>
+            <term ref="pfx:Loan"/>
         </config>
         <pd:inputBindings>
             <xmlString>
@@ -283,11 +284,11 @@
             </xmlString>
         </pd:inputBindings>
     </pd:activity>
-    <pd:activity name="Write File">
+    <pd:activity name="Write to Error File">
         <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
         <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
-        <pd:x>435</pd:x>
-        <pd:y>221</pd:y>
+        <pd:x>408</pd:x>
+        <pd:y>336</pd:y>
         <config>
             <encoding>text</encoding>
             <compressFile>None</compressFile>
@@ -327,23 +328,32 @@
     <pd:transition>
         <pd:from>Parse XML</pd:from>
         <pd:to>Blacklist</pd:to>
+        <pd:xpathDescription>status='OK'</pd:xpathDescription>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
         <pd:from>Blacklist</pd:from>
-        <pd:to>Write File</pd:to>
+        <pd:to>Write to Error File</pd:to>
         <pd:xpathDescription>Write to Error File</pd:xpathDescription>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-65485</pd:lineColor>
         <pd:conditionType>error</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>Write File</pd:from>
+        <pd:from>Write to Error File</pd:from>
         <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse XML</pd:from>
+        <pd:to>Write to Error File</pd:to>
+        <pd:xpathDescription>Error</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-3407821</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
     </pd:transition>
 </pd:ProcessDefinition>

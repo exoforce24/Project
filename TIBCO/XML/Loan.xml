@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Loan xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\Users\Flee_\Desktop\SMU\EI\Project\Project\TIBCO\XML\Loan.xsd">
-    <Name>Nathan</Name>
-    <NRIC>S98123456A</NRIC>
-    <Amount>50000</Amount>
-    <Type>Personal</Type>
-</Loan>
