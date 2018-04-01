@@ -4,15 +4,16 @@
   <xs:element name="Loan">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="Name" type="xs:string" />
+        <xs:element minOccurs="0" name="name" type="xs:string" />
         <xs:element minOccurs="0" name="NRIC" type="xs:string" />
-        <xs:element minOccurs="0" name="Contact_No" type="xs:unsignedInt" />
-        <xs:element minOccurs="0" name="Email" type="xs:string" />
-        <xs:element minOccurs="0" name="loanAmount" type="xs:unsignedShort" />
+        <xs:element minOccurs="0" name="contact_no" type="xs:unsignedInt" />
+        <xs:element minOccurs="0" name="email" type="xs:string" />
+        <xs:element minOccurs="0" name="annual_income" type="xs:unsignedShort" />
+        <xs:element minOccurs="0" name="loan_duration" type="xs:unsignedByte" />
+        <xs:element minOccurs="0" name="loan_amount" type="xs:unsignedShort" />
         <xs:element minOccurs="0" name="loanType" type="xs:string" />
-        <xs:element minOccurs="0" name="InterestRate" type="xs:unsignedByte" />
-        <xs:element minOccurs="0" name="Payment_Type" type="xs:string" />
-        <xs:element minOccurs="0" name="Preferred_Mode_Of_Communication" type="xs:string" />
+        <xs:element minOccurs="0" name="interestRate" type="xs:decimal" />
+        <xs:element minOccurs="0" name="preferred_comms" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
