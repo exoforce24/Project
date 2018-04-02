@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx4="http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions" xmlns:pfx3="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pfx2="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan.xsd" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan Applicant.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:pfx4="http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions" xmlns:pfx3="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pfx2="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan.xsd" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan Applicant.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan Applicant.xsd" schemaLocation="/XML/Loan Applicant.xsd"/>
     <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan.xsd" schemaLocation="/XML/Loan.xsd"/>
     <pd:name>Businessprocesses/LOAN ENQUIRY SYSTEM.process</pd:name>
@@ -375,67 +375,11 @@
             </ResponseActivityInput>
         </pd:inputBindings>
     </pd:activity>
-    <pd:activity name="Send loan request">
-        <pd:type>com.tibco.plugin.jms.JMSQueueSendActivity</pd:type>
-        <pd:resourceType>ae.activities.JMSQueueSendActivity</pd:resourceType>
-        <pd:x>59</pd:x>
-        <pd:y>156</pd:y>
-        <config>
-            <PermittedMessageType>Text</PermittedMessageType>
-            <SessionAttributes>
-                <transacted>false</transacted>
-                <acknowledgeMode>1</acknowledgeMode>
-                <maxSessions>1</maxSessions>
-                <destination>q.search</destination>
-            </SessionAttributes>
-            <ConfigurableHeaders>
-                <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
-                <JMSExpiration>0</JMSExpiration>
-                <JMSPriority>4</JMSPriority>
-            </ConfigurableHeaders>
-            <ConnectionReference>/SharedResources/Connections/JMS Connection.sharedjmscon</ConnectionReference>
-        </config>
-        <pd:inputBindings>
-            <ns1:ActivityInput>
-                <Body>
-                    <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/QueryString"/>
-                </Body>
-            </ns1:ActivityInput>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="Get Loan Results">
-        <pd:type>com.tibco.plugin.jms.JMSQueueGetMessageActivity</pd:type>
-        <pd:resourceType>ae.activities.JMSQueueGetMessageActivity</pd:resourceType>
-        <pd:x>173</pd:x>
-        <pd:y>114</pd:y>
-        <config>
-            <PermittedMessageType>Text</PermittedMessageType>
-            <SessionAttributes>
-                <transacted>false</transacted>
-                <acknowledgeMode>1</acknowledgeMode>
-                <maxSessions>1</maxSessions>
-                <destination>q.searchresults</destination>
-            </SessionAttributes>
-            <ConfigurableHeaders>
-                <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
-                <JMSExpiration>0</JMSExpiration>
-                <JMSPriority>4</JMSPriority>
-            </ConfigurableHeaders>
-            <ConnectionReference>/SharedResources/Connections/JMS Connection.sharedjmscon</ConnectionReference>
-        </config>
-        <pd:inputBindings>
-            <ns1:ActivityInput>
-                <destinationQueue>
-                    <xsl:value-of select="$Send-loan-request/ns1:aEmptyOutputClass/ns1:MessageID"/>
-                </destinationQueue>
-            </ns1:ActivityInput>
-        </pd:inputBindings>
-    </pd:activity>
     <pd:activity name="Parse XML">
         <pd:type>com.tibco.plugin.xml.XMLParseActivity</pd:type>
         <pd:resourceType>ae.activities.XMLParseActivity</pd:resourceType>
-        <pd:x>258</pd:x>
-        <pd:y>264</pd:y>
+        <pd:x>238</pd:x>
+        <pd:y>271</pd:y>
         <config>
             <inputStyle>text</inputStyle>
             <xsdVersion>default</xsdVersion>
@@ -444,8 +388,29 @@
         </config>
         <pd:inputBindings>
             <xmlString>
-                <xsl:value-of select="$Get-Loan-Results/ns1:ActivityOutput/Body"/>
+                <xsl:value-of select="tib:render-xml($Loan-Application-receiver/ProcessStarterOutput/parameters)"/>
             </xmlString>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Write File">
+        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+        <pd:x>95</pd:x>
+        <pd:y>277</pd:y>
+        <config>
+            <encoding>text</encoding>
+            <compressFile>None</compressFile>
+            <append>true</append>
+        </config>
+        <pd:inputBindings>
+            <ns2:WriteActivityInputTextClass>
+                <fileName>
+                    <xsl:value-of select="&quot;D:\EI\test\test.txt&quot;"/>
+                </fileName>
+                <textContent>
+                    <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters"/>
+                </textContent>
+            </ns2:WriteActivityInputTextClass>
         </pd:inputBindings>
     </pd:activity>
     <pd:transition>
@@ -509,29 +474,22 @@
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
+        <pd:from>Parse XML</pd:from>
+        <pd:to>Blacklist</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
         <pd:from>Loan Application receiver</pd:from>
-        <pd:to>Send loan request</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Send loan request</pd:from>
-        <pd:to>Get Loan Results</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Get Loan Results</pd:from>
         <pd:to>Parse XML</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>Parse XML</pd:from>
-        <pd:to>Blacklist</pd:to>
+        <pd:from>Loan Application receiver</pd:from>
+        <pd:to>Write File</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
