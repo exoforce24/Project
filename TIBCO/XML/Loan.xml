@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Loan xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="D:\EI\Project\gitproject\Project\TIBCO\XML\Loan.xsd">
+    <NRIC>S98123456A</NRIC>
+    <contact_no>94350137</contact_no>
+    <email>weien.ng.2016@sis.smu.edu.sg</email>
+    <annual_income>40000</annual_income>
+    <loan_duration>6</loan_duration>
+    <loan_amount>12000</loan_amount>
+    <loanType>Personal</loanType>
+    <interestRate>0.05</interestRate>
+    <preferred_comms>Email</preferred_comms>
+</Loan>
