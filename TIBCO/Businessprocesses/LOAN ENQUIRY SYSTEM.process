@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:pfx4="http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions" xmlns:pfx3="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pfx2="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan.xsd" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan Applicant.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:ns3="http://xmlns.tibco.com/bw/activity/xml/render/bytesEnvelope/2003/05" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx4="http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:pfx3="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pfx2="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan.xsd" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan Applicant.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan Applicant.xsd" schemaLocation="/XML/Loan Applicant.xsd"/>
     <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/XML/Loan.xsd" schemaLocation="/XML/Loan.xsd"/>
     <pd:name>Businessprocesses/LOAN ENQUIRY SYSTEM.process</pd:name>
@@ -262,7 +262,7 @@
     <pd:activity name="Blacklist">
         <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
         <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
-        <pd:x>309</pd:x>
+        <pd:x>310</pd:x>
         <pd:y>134</pd:y>
         <config>
             <timeout>10</timeout>
@@ -271,50 +271,32 @@
             <emptyStrAsNil>false</emptyStrAsNil>
             <jdbcSharedConfig>/SharedResources/Connections/JDBC/JDBC Connection.sharedjdbc</jdbcSharedConfig>
             <statement>SELECT name FROM personal_details WHERE nric = ?</statement>
-            <oraObjects/>
-            <oraTables/>
-            <QueryOutputCachedSchemaColumns>name</QueryOutputCachedSchemaColumns>
-            <QueryOutputCachedSchemaDataTypes>-1</QueryOutputCachedSchemaDataTypes>
-            <QueryOutputCachedSchemaDataTypesName>VARCHAR</QueryOutputCachedSchemaDataTypesName>
-            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
             <Prepared_Param_DataType>
                 <parameter>
                     <parameterName>NRIC</parameterName>
                     <dataType>VARCHAR</dataType>
                 </parameter>
             </Prepared_Param_DataType>
+            <oraObjects/>
+            <oraTables/>
+            <QueryOutputCachedSchemaColumns>name</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>-1</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>VARCHAR</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
         </config>
         <pd:inputBindings>
             <jdbcQueryActivityInput>
-                <nric>
+                <NRIC>
                     <xsl:choose>
-                        <xsl:when test="exists($Loan-Application-receiver/ProcessStarterOutput/parameters/nric)">
-                            <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/nric"/>
+                        <xsl:when test="exists($Parse-XML/Loan/NRIC)">
+                            <xsl:value-of select="$Parse-XML/Loan/NRIC"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:attribute name="xsi:nil">true</xsl:attribute>
                         </xsl:otherwise>
                     </xsl:choose>
-                </nric>
+                </NRIC>
             </jdbcQueryActivityInput>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="Write to Error File">
-        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
-        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
-        <pd:x>403</pd:x>
-        <pd:y>332</pd:y>
-        <config>
-            <encoding>text</encoding>
-            <compressFile>None</compressFile>
-            <append>true</append>
-        </config>
-        <pd:inputBindings>
-            <ns2:WriteActivityInputTextClass>
-                <textContent>
-                    <xsl:value-of select="concat($_error_Blacklist/ActivityErrors, $_error)"/>
-                </textContent>
-            </ns2:WriteActivityInputTextClass>
         </pd:inputBindings>
     </pd:activity>
     <pd:activity name="Catch Exception">
@@ -375,11 +357,77 @@
             </ResponseActivityInput>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="Render XML">
+        <pd:type>com.tibco.plugin.xml.XMLRendererActivity</pd:type>
+        <pd:resourceType>ae.activities.XMLRendererActivity</pd:resourceType>
+        <pd:x>163</pd:x>
+        <pd:y>148</pd:y>
+        <config>
+            <renderAsText>text</renderAsText>
+            <validateInput>true</validateInput>
+            <textEncoding>UTF-8</textEncoding>
+            <term ref="pfx2:Loan"/>
+        </config>
+        <pd:inputBindings>
+            <Loan>
+                <xsl:if test="$Loan-Application-receiver/ProcessStarterOutput/parameters/name">
+                    <name>
+                        <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/name"/>
+                    </name>
+                </xsl:if>
+                <xsl:if test="$Loan-Application-receiver/ProcessStarterOutput/parameters/NRIC">
+                    <NRIC>
+                        <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/NRIC"/>
+                    </NRIC>
+                </xsl:if>
+                <xsl:if test="$Loan-Application-receiver/ProcessStarterOutput/parameters/contact_no">
+                    <contact_no>
+                        <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/contact_no"/>
+                    </contact_no>
+                </xsl:if>
+                <xsl:if test="$Loan-Application-receiver/ProcessStarterOutput/parameters/email">
+                    <email>
+                        <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/email"/>
+                    </email>
+                </xsl:if>
+                <xsl:if test="$Loan-Application-receiver/ProcessStarterOutput/parameters/annual_income">
+                    <annual_income>
+                        <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/annual_income"/>
+                    </annual_income>
+                </xsl:if>
+                <xsl:if test="$Loan-Application-receiver/ProcessStarterOutput/parameters/loan_duration">
+                    <loan_duration>
+                        <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/loan_duration"/>
+                    </loan_duration>
+                </xsl:if>
+                <xsl:if test="$Loan-Application-receiver/ProcessStarterOutput/parameters/loan_amount">
+                    <loan_amount>
+                        <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/loan_amount"/>
+                    </loan_amount>
+                </xsl:if>
+                <xsl:if test="$Loan-Application-receiver/ProcessStarterOutput/parameters/loanType">
+                    <loanType>
+                        <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/loanType"/>
+                    </loanType>
+                </xsl:if>
+                <xsl:if test="$Loan-Application-receiver/ProcessStarterOutput/parameters/interestRate">
+                    <interestRate>
+                        <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/interestRate"/>
+                    </interestRate>
+                </xsl:if>
+                <xsl:if test="$Loan-Application-receiver/ProcessStarterOutput/parameters/preferred_comms">
+                    <preferred_comms>
+                        <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters/preferred_comms"/>
+                    </preferred_comms>
+                </xsl:if>
+            </Loan>
+        </pd:inputBindings>
+    </pd:activity>
     <pd:activity name="Parse XML">
         <pd:type>com.tibco.plugin.xml.XMLParseActivity</pd:type>
         <pd:resourceType>ae.activities.XMLParseActivity</pd:resourceType>
-        <pd:x>238</pd:x>
-        <pd:y>271</pd:y>
+        <pd:x>229</pd:x>
+        <pd:y>236</pd:y>
         <config>
             <inputStyle>text</inputStyle>
             <xsdVersion>default</xsdVersion>
@@ -388,29 +436,8 @@
         </config>
         <pd:inputBindings>
             <xmlString>
-                <xsl:value-of select="tib:render-xml($Loan-Application-receiver/ProcessStarterOutput/parameters)"/>
+                <xsl:value-of select="$Render-XML/xmlString"/>
             </xmlString>
-        </pd:inputBindings>
-    </pd:activity>
-    <pd:activity name="Write File">
-        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
-        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
-        <pd:x>95</pd:x>
-        <pd:y>277</pd:y>
-        <config>
-            <encoding>text</encoding>
-            <compressFile>None</compressFile>
-            <append>true</append>
-        </config>
-        <pd:inputBindings>
-            <ns2:WriteActivityInputTextClass>
-                <fileName>
-                    <xsl:value-of select="&quot;D:\EI\test\test.txt&quot;"/>
-                </fileName>
-                <textContent>
-                    <xsl:value-of select="$Loan-Application-receiver/ProcessStarterOutput/parameters"/>
-                </textContent>
-            </ns2:WriteActivityInputTextClass>
         </pd:inputBindings>
     </pd:activity>
     <pd:transition>
@@ -430,21 +457,6 @@
     </pd:transition>
     <pd:transition>
         <pd:from>Send-HTTP-Response-1</pd:from>
-        <pd:to>End</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Blacklist</pd:from>
-        <pd:to>Write to Error File</pd:to>
-        <pd:xpathDescription>Write to Error File</pd:xpathDescription>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-65485</pd:lineColor>
-        <pd:conditionType>error</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Write to Error File</pd:from>
         <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
@@ -474,6 +486,20 @@
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
+        <pd:from>Loan Application receiver</pd:from>
+        <pd:to>Render XML</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Render XML</pd:from>
+        <pd:to>Parse XML</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
         <pd:from>Parse XML</pd:from>
         <pd:to>Blacklist</pd:to>
         <pd:lineType>Default</pd:lineType>
@@ -481,15 +507,8 @@
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>Loan Application receiver</pd:from>
-        <pd:to>Parse XML</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Loan Application receiver</pd:from>
-        <pd:to>Write File</pd:to>
+        <pd:from>Blacklist</pd:from>
+        <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
